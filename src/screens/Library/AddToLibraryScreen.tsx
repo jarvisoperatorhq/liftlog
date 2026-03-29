@@ -86,6 +86,10 @@ export default function AddToLibraryScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+          <Ionicons name="arrow-back" size={24} color="#fff" />
+          <Text style={styles.backText}>Back</Text>
+        </TouchableOpacity>
         <Text style={styles.headerTitle}>Add to Library</Text>
         <Text style={styles.headerSubtitle}>Choose where to add this exercise</Text>
       </View>
@@ -122,9 +126,19 @@ const styles = StyleSheet.create({
   },
   header: {
     padding: 20,
-    paddingTop: 20,
+    paddingTop: 60,
     borderBottomWidth: 1,
     borderBottomColor: '#222',
+  },
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  backText: {
+    fontSize: 16,
+    color: '#fff',
+    marginLeft: 4,
   },
   headerTitle: {
     fontSize: 24,

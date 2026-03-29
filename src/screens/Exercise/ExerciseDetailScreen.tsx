@@ -90,6 +90,12 @@ export default function ExerciseDetailScreen() {
 
   return (
     <View style={styles.container}>
+      <View style={styles.header}>
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+          <Ionicons name="arrow-back" size={24} color="#fff" />
+          <Text style={styles.backText}>Back</Text>
+        </TouchableOpacity>
+      </View>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {/* Header Card */}
         <View style={styles.headerCard}>
@@ -219,6 +225,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#0F1113',
+  },
+  header: {
+    padding: 20,
+    paddingTop: 60,
+    paddingBottom: 10,
+  },
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  backText: {
+    fontSize: 16,
+    color: '#fff',
+    marginLeft: 4,
   },
   scrollContent: {
     padding: 20,

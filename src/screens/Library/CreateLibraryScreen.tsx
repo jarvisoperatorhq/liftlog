@@ -68,6 +68,13 @@ export default function CreateLibraryScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}
     >
+      <View style={styles.header}>
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+          <Ionicons name="arrow-back" size={24} color="#fff" />
+          <Text style={styles.backText}>Back</Text>
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Create Library</Text>
+      </View>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.form}>
           <View style={styles.inputGroup}>
@@ -158,6 +165,27 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#0F1113',
+  },
+  header: {
+    padding: 20,
+    paddingTop: 60,
+    borderBottomWidth: 1,
+    borderBottomColor: '#222',
+  },
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  backText: {
+    fontSize: 16,
+    color: '#fff',
+    marginLeft: 4,
+  },
+  headerTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#fff',
   },
   scrollContent: {
     flexGrow: 1,
