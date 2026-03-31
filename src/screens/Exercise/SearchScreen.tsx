@@ -173,49 +173,25 @@ export default function SearchScreen() {
         </View>
 
         {isCustom ? (
-          <View style={styles.menuContainer}>
+          <View style={styles.actionButtons}>
             <TouchableOpacity
-              style={styles.menuButton}
+              style={styles.actionButton}
               onPress={(e) => {
                 e.stopPropagation();
-                setActiveMenuId(isMenuOpen ? null : item.id);
+                navigation.navigate('EditExercise', { exerciseId: item.id });
               }}
             >
-              <Ionicons name="ellipsis-vertical" size={20} color="#666" />
+              <Ionicons name="create-outline" size={20} color="#7C5CFF" />
             </TouchableOpacity>
-
-            {isMenuOpen && (
-              <>
-                <TouchableOpacity
-                  style={styles.menuOverlay}
-                  onPress={() => setActiveMenuId(null)}
-                />
-                <View style={styles.menuDropdown}>
-                  <TouchableOpacity
-                    style={styles.menuItem}
-                    onPress={(e) => {
-                      e.stopPropagation();
-                      setActiveMenuId(null);
-                      navigation.navigate('EditExercise', { exerciseId: item.id });
-                    }}
-                  >
-                    <Ionicons name="create-outline" size={18} color="#7C5CFF" />
-                    <Text style={styles.menuItemText}>Edit</Text>
-                  </TouchableOpacity>
-                  <View style={styles.menuDivider} />
-                  <TouchableOpacity
-                    style={styles.menuItem}
-                    onPress={(e) => {
-                      e.stopPropagation();
-                      deleteExercise(item.id);
-                    }}
-                  >
-                    <Ionicons name="trash-outline" size={18} color="#FF6B6B" />
-                    <Text style={[styles.menuItemText, styles.menuItemTextDanger]}>Delete</Text>
-                  </TouchableOpacity>
-                </View>
-              </>
-            )}
+            <TouchableOpacity
+              style={styles.actionButton}
+              onPress={(e) => {
+                e.stopPropagation();
+                deleteExercise(item.id);
+              }}
+            >
+              <Ionicons name="trash-outline" size={20} color="#FF6B6B" />
+            </TouchableOpacity>
           </View>
         ) : (
           <Ionicons name="chevron-forward" size={20} color="#666" />
@@ -584,54 +560,14 @@ const styles = StyleSheet.create({
     color: '#666',
     marginTop: 8,
   },
-  menuContainer: {
-    position: 'relative',
-    zIndex: 10,
-  },
-  menuButton: {
-    padding: 8,
-  },
-  menuOverlay: {
-    position: 'absolute',
-    top: -500,
-    left: -500,
-    right: -500,
-    bottom: -500,
-    zIndex: 1,
-  },
-  menuDropdown: {
-    position: 'absolute',
-    right: 0,
-    top: 35,
-    backgroundColor: '#222',
-    borderRadius: 12,
-    paddingVertical: 8,
-    minWidth: 150,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 8,
-    zIndex: 2,
-  },
-  menuItem: {
+  actionButtons: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    gap: 12,
+    gap: 8,
   },
-  menuItemText: {
-    fontSize: 14,
-    color: '#fff',
-    fontWeight: '500',
-  },
-  menuItemTextDanger: {
-    color: '#FF6B6B',
-  },
-  menuDivider: {
-    height: 1,
-    backgroundColor: '#333',
-    marginHorizontal: 12,
+  actionButton: {
+    padding: 8,
+    borderRadius: 8,
+    backgroundColor: '#222',
   },
 });
