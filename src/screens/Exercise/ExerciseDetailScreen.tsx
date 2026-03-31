@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
@@ -13,7 +13,7 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Exercise, Library, RootStackParamList } from '../../types';
-import { exercises } from '../../data/exercises';
+import { exercises as builtInExercises } from '../../data/exercises';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type ExerciseDetailRouteProp = RouteProp<RootStackParamList, 'ExerciseDetail'>;
@@ -29,14 +29,35 @@ export default function ExerciseDetailScreen() {
   const [libraries, setLibraries] = useState<Library[]>([]);
   const [showAddModal, setShowAddModal] = useState(false);
 
-  useEffect(() => {
-    const found = exercises.find(e => e.id === exerciseId);
+  const loadExercise = useCallback(async () => {
+    // First check built-in exercises
+    const found = builtInExercises.find(e => e.id === exerciseId);
     if (found) {
       setExercise(found);
       navigation.setOptions({ title: found.name });
+      return;
     }
+
+    // Then check custom exercises
+    try {
+      const stored = await AsyncStorage.getItem('@liftlog_custom_exercises');
+      if (stored) {
+        const customExercises: Exercise[] = JSON.parse(stored);
+        const customFound = customExercises.find(e => e.id === exerciseId);
+        if (customFound) {
+          setExercise(customFound);
+          navigation.setOptions({ title: customFound.name });
+        }
+      }
+    } catch (e) {
+      console.error('Failed to load custom exercise:', e);
+    }
+  }, [exerciseId, navigation]);
+
+  useEffect(() => {
+    loadExercise();
     loadLibraries();
-  }, []);
+  }, [loadExercise]);
 
   const loadLibraries = async () => {
     try {

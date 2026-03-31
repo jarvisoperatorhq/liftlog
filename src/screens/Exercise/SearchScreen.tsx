@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
@@ -10,11 +10,12 @@ import {
   ScrollView,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Exercise, RootStackParamList } from '../../types';
-import { exercises, muscleGroups, equipmentTypes } from '../../data/exercises';
+import { exercises as builtInExercises, muscleGroups, equipmentTypes } from '../../data/exercises';
 
 type SearchScreenNavigationProp = StackNavigationProp<RootStackParamList>;
 
@@ -25,24 +26,46 @@ export default function SearchScreen() {
   const [selectedMuscles, setSelectedMuscles] = useState<string[]>([]);
   const [selectedEquipment, setSelectedEquipment] = useState<string[]>([]);
   const [showFilters, setShowFilters] = useState(false);
+  const [customExercises, setCustomExercises] = useState<Exercise[]>([]);
+
+  const loadCustomExercises = useCallback(async () => {
+    try {
+      const stored = await AsyncStorage.getItem('@liftlog_custom_exercises');
+      if (stored) {
+        setCustomExercises(JSON.parse(stored));
+      }
+    } catch (e) {
+      console.error('Failed to load custom exercises:', e);
+    }
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadCustomExercises();
+    }, [loadCustomExercises])
+  );
+
+  const allExercises = useMemo(() => {
+    return [...builtInExercises, ...customExercises];
+  }, [customExercises]);
 
   const filteredExercises = useMemo(() => {
-    return exercises.filter((exercise) => {
-      const matchesSearch = 
+    return allExercises.filter((exercise) => {
+      const matchesSearch =
         exercise.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         exercise.muscleGroups.some(m => m.toLowerCase().includes(searchQuery.toLowerCase()));
-      
-      const matchesMuscle = 
-        selectedMuscles.length === 0 || 
+
+      const matchesMuscle =
+        selectedMuscles.length === 0 ||
         exercise.muscleGroups.some(m => selectedMuscles.includes(m));
-      
-      const matchesEquipment = 
-        selectedEquipment.length === 0 || 
+
+      const matchesEquipment =
+        selectedEquipment.length === 0 ||
         selectedEquipment.includes(exercise.equipment);
-      
+
       return matchesSearch && matchesMuscle && matchesEquipment;
     });
-  }, [searchQuery, selectedMuscles, selectedEquipment]);
+  }, [searchQuery, selectedMuscles, selectedEquipment, allExercises]);
 
   const toggleMuscle = (muscle: string) => {
     setSelectedMuscles(prev => 
@@ -116,7 +139,13 @@ export default function SearchScreen() {
             </TouchableOpacity>
           )}
         </View>
-        <TouchableOpacity 
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={() => navigation.navigate('CreateExercise')}
+        >
+          <Ionicons name="add" size={24} color="#fff" />
+        </TouchableOpacity>
+        <TouchableOpacity
           style={[styles.filterButton, activeFiltersCount > 0 && styles.filterButtonActive]}
           onPress={() => setShowFilters(!showFilters)}
         >
@@ -255,6 +284,14 @@ const styles = StyleSheet.create({
     height: 44,
     color: '#fff',
     fontSize: 16,
+  },
+  addButton: {
+    width: 44,
+    height: 44,
+    backgroundColor: '#7C5CFF',
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   filterButton: {
     width: 44,
