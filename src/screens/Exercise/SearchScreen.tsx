@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Pressable,
   ScrollView,
+  Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
@@ -27,6 +28,7 @@ export default function SearchScreen() {
   const [selectedEquipment, setSelectedEquipment] = useState<string[]>([]);
   const [showFilters, setShowFilters] = useState(false);
   const [customExercises, setCustomExercises] = useState<Exercise[]>([]);
+  const [activeMenuId, setActiveMenuId] = useState<string | null>(null);
 
   const loadCustomExercises = useCallback(async () => {
     try {
@@ -88,35 +90,139 @@ export default function SearchScreen() {
     setSelectedEquipment([]);
   };
 
-  const renderExerciseItem = ({ item }: { item: Exercise }) => (
-    <Pressable
-      style={({ pressed }) => [styles.exerciseItem, pressed && styles.exerciseItemPressed]}
-      onPress={() => navigation.navigate('ExerciseDetail', { exerciseId: item.id })}
-    >
-      <View style={styles.exerciseIcon}>
-        <Ionicons name="barbell" size={24} color="#7C5CFF" />
-      </View>
-      <View style={styles.exerciseInfo}>
-        <Text style={styles.exerciseName}>{item.name}</Text>
-        <View style={styles.exerciseMeta}>
-          <Text style={styles.exerciseMuscle}>{item.muscleGroups.join(', ')}</Text>
-          <Text style={styles.bullet}>•</Text>
-          <Text style={styles.exerciseEquipment}>{item.equipment}</Text>
+  const isCustomExercise = (exerciseId: string) => {
+    return exerciseId.startsWith('custom_');
+  };
+
+  const deleteExercise = async (exerciseId: string) => {
+    Alert.alert(
+      'Delete Exercise',
+      'Are you sure? This will remove the exercise from all workouts.',
+      [
+        { text: 'Cancel', style: 'cancel', onPress: () => setActiveMenuId(null) },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              // Remove from custom exercises
+              const stored = await AsyncStorage.getItem('@liftlog_custom_exercises');
+              if (stored) {
+                const customExercises: Exercise[] = JSON.parse(stored);
+                const filtered = customExercises.filter(e => e.id !== exerciseId);
+                await AsyncStorage.setItem('@liftlog_custom_exercises', JSON.stringify(filtered));
+                setCustomExercises(filtered);
+              }
+
+              // Remove from all libraries
+              const librariesStored = await AsyncStorage.getItem('@liftlog_libraries');
+              if (librariesStored) {
+                const allLibraries = JSON.parse(librariesStored);
+                const updated = allLibraries.map((lib: any) => ({
+                  ...lib,
+                  items: lib.items.filter((i: any) => i.exerciseId !== exerciseId),
+                }));
+                await AsyncStorage.setItem('@liftlog_libraries', JSON.stringify(updated));
+              }
+
+              setActiveMenuId(null);
+            } catch (e) {
+              Alert.alert('Error', 'Failed to delete exercise');
+            }
+          },
+        },
+      ]
+    );
+  };
+
+  const renderExerciseItem = ({ item }: { item: Exercise }) => {
+    const isCustom = isCustomExercise(item.id);
+    const isMenuOpen = activeMenuId === item.id;
+
+    return (
+      <Pressable
+        style={({ pressed }) => [styles.exerciseItem, pressed && styles.exerciseItemPressed]}
+        onPress={() => {
+          if (activeMenuId) {
+            setActiveMenuId(null);
+          } else {
+            navigation.navigate('ExerciseDetail', { exerciseId: item.id });
+          }
+        }}
+      >
+        <View style={styles.exerciseIcon}>
+          <Ionicons name="barbell" size={24} color="#7C5CFF" />
         </View>
-        <View style={styles.difficultyBadge}>
-          <Text style={[
-            styles.difficultyText,
-            item.difficulty === 'beginner' && styles.difficultyBeginner,
-            item.difficulty === 'intermediate' && styles.difficultyIntermediate,
-            item.difficulty === 'advanced' && styles.difficultyAdvanced,
-          ]}>
-            {item.difficulty}
-          </Text>
+        <View style={styles.exerciseInfo}>
+          <Text style={styles.exerciseName}>{item.name}</Text>
+          <View style={styles.exerciseMeta}>
+            <Text style={styles.exerciseMuscle}>{item.muscleGroups.join(', ')}</Text>
+            <Text style={styles.bullet}>•</Text>
+            <Text style={styles.exerciseEquipment}>{item.equipment}</Text>
+          </View>
+          <View style={styles.difficultyBadge}>
+            <Text style={[
+              styles.difficultyText,
+              item.difficulty === 'beginner' && styles.difficultyBeginner,
+              item.difficulty === 'intermediate' && styles.difficultyIntermediate,
+              item.difficulty === 'advanced' && styles.difficultyAdvanced,
+            ]}>
+              {item.difficulty}
+            </Text>
+          </View>
         </View>
-      </View>
-      <Ionicons name="chevron-forward" size={20} color="#666" />
-    </Pressable>
-  );
+
+        {isCustom ? (
+          <View style={styles.menuContainer}>
+            <TouchableOpacity
+              style={styles.menuButton}
+              onPress={(e) => {
+                e.stopPropagation();
+                setActiveMenuId(isMenuOpen ? null : item.id);
+              }}
+            >
+              <Ionicons name="ellipsis-vertical" size={20} color="#666" />
+            </TouchableOpacity>
+
+            {isMenuOpen && (
+              <>
+                <TouchableOpacity
+                  style={styles.menuOverlay}
+                  onPress={() => setActiveMenuId(null)}
+                />
+                <View style={styles.menuDropdown}>
+                  <TouchableOpacity
+                    style={styles.menuItem}
+                    onPress={(e) => {
+                      e.stopPropagation();
+                      setActiveMenuId(null);
+                      navigation.navigate('EditExercise', { exerciseId: item.id });
+                    }}
+                  >
+                    <Ionicons name="create-outline" size={18} color="#7C5CFF" />
+                    <Text style={styles.menuItemText}>Edit</Text>
+                  </TouchableOpacity>
+                  <View style={styles.menuDivider} />
+                  <TouchableOpacity
+                    style={styles.menuItem}
+                    onPress={(e) => {
+                      e.stopPropagation();
+                      deleteExercise(item.id);
+                    }}
+                  >
+                    <Ionicons name="trash-outline" size={18} color="#FF6B6B" />
+                    <Text style={[styles.menuItemText, styles.menuItemTextDanger]}>Delete</Text>
+                  </TouchableOpacity>
+                </View>
+              </>
+            )}
+          </View>
+        ) : (
+          <Ionicons name="chevron-forward" size={20} color="#666" />
+        )}
+      </Pressable>
+    );
+  };
 
   const activeFiltersCount = selectedMuscles.length + selectedEquipment.length;
 
@@ -477,5 +583,55 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#666',
     marginTop: 8,
+  },
+  menuContainer: {
+    position: 'relative',
+    zIndex: 10,
+  },
+  menuButton: {
+    padding: 8,
+  },
+  menuOverlay: {
+    position: 'absolute',
+    top: -500,
+    left: -500,
+    right: -500,
+    bottom: -500,
+    zIndex: 1,
+  },
+  menuDropdown: {
+    position: 'absolute',
+    right: 0,
+    top: 35,
+    backgroundColor: '#222',
+    borderRadius: 12,
+    paddingVertical: 8,
+    minWidth: 150,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
+    zIndex: 2,
+  },
+  menuItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    gap: 12,
+  },
+  menuItemText: {
+    fontSize: 14,
+    color: '#fff',
+    fontWeight: '500',
+  },
+  menuItemTextDanger: {
+    color: '#FF6B6B',
+  },
+  menuDivider: {
+    height: 1,
+    backgroundColor: '#333',
+    marginHorizontal: 12,
   },
 });
