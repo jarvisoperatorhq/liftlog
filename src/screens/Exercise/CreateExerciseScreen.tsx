@@ -301,7 +301,7 @@ export default function CreateExerciseScreen() {
         </View>
       </ScrollView>
 
-      <View style={styles.footer}>
+      <View style={[styles.footer, { paddingBottom: insets.bottom + 20 }]}>
         <TouchableOpacity style={styles.createButton} onPress={handleCreate}>
           <Text style={styles.createButtonText}>Create Exercise</Text>
         </TouchableOpacity>
@@ -478,7 +478,6 @@ const styles = StyleSheet.create({
   },
   footer: {
     padding: 20,
-    paddingBottom: 40,
     borderTopWidth: 1,
     borderTopColor: '#222',
     backgroundColor: '#0F1113',
