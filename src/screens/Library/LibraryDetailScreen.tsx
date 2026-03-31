@@ -55,7 +55,7 @@ export default function LibraryDetailScreen() {
   const removeExercise = (exerciseId: string) => {
     Alert.alert(
       'Remove Exercise',
-      'Are you sure you want to remove this exercise from the library?',
+      'Are you sure you want to remove this exercise from the workout?',
       [
         { text: 'Cancel', style: 'cancel' },
         {
@@ -63,10 +63,10 @@ export default function LibraryDetailScreen() {
           style: 'destructive',
           onPress: async () => {
             if (!library) return;
-            
+
             const updatedItems = library.items.filter(i => i.exerciseId !== exerciseId);
             const updatedLibrary = { ...library, items: updatedItems, updatedAt: Date.now() };
-            
+
             try {
               const stored = await AsyncStorage.getItem('@liftlog_libraries');
               if (stored) {
@@ -86,7 +86,7 @@ export default function LibraryDetailScreen() {
 
   const deleteLibrary = () => {
     Alert.alert(
-      'Delete Library',
+      'Delete Workout',
       'Are you sure? This cannot be undone.',
       [
         { text: 'Cancel', style: 'cancel' },
@@ -103,7 +103,7 @@ export default function LibraryDetailScreen() {
                 navigation.goBack();
               }
             } catch (e) {
-              Alert.alert('Error', 'Failed to delete library');
+              Alert.alert('Error', 'Failed to delete workout');
             }
           },
         },
@@ -149,7 +149,7 @@ export default function LibraryDetailScreen() {
       <Ionicons name="barbell-outline" size={48} color="#444" />
       <Text style={styles.emptyTitle}>No exercises yet</Text>
       <Text style={styles.emptyText}>
-        Add exercises to this library from the Search tab
+        Add exercises to this workout from the Search tab
       </Text>
       <TouchableOpacity
         style={styles.emptyButton}
@@ -163,7 +163,7 @@ export default function LibraryDetailScreen() {
   if (!library) {
     return (
       <View style={styles.container}>
-        <Text style={styles.errorText}>Library not found</Text>
+        <Text style={styles.errorText}>Workout not found</Text>
       </View>
     );
   }

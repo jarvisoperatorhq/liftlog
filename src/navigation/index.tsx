@@ -27,8 +27,8 @@ function TabNavigator() {
         tabBarIcon: ({ focused, color, size }) => {
           let iconName: keyof typeof Ionicons.glyphMap;
           
-          if (route.name === 'MyLibrary') {
-            iconName = focused ? 'library' : 'library-outline';
+          if (route.name === 'Workouts') {
+            iconName = focused ? 'barbell' : 'barbell-outline';
           } else if (route.name === 'Discover') {
             iconName = focused ? 'compass' : 'compass-outline';
           } else if (route.name === 'Search') {
@@ -54,10 +54,10 @@ function TabNavigator() {
         headerTintColor: '#fff',
       })}
     >
-      <Tab.Screen 
-        name="MyLibrary" 
-        component={LibraryScreen} 
-        options={{ title: 'My Library' }}
+      <Tab.Screen
+        name="Workouts"
+        component={LibraryScreen}
+        options={{ title: 'Workouts' }}
       />
       <Tab.Screen 
         name="Discover" 

@@ -50,7 +50,7 @@ export type RootStackParamList = {
 };
 
 export type BottomTabParamList = {
-  MyLibrary: undefined;
+  Workouts: undefined;
   Discover: undefined;
   Search: undefined;
   Profile: undefined;

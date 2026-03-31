@@ -29,7 +29,7 @@ export default function CreateLibraryScreen() {
 
   const handleCreate = async () => {
     if (!name.trim()) {
-      Alert.alert('Error', 'Please give your library a name');
+      Alert.alert('Error', 'Please give your workout a name');
       return;
     }
 
@@ -57,7 +57,7 @@ export default function CreateLibraryScreen() {
 
       navigation.goBack();
     } catch (e) {
-      Alert.alert('Error', 'Failed to create library');
+      Alert.alert('Error', 'Failed to create workout');
     } finally {
       setLoading(false);
     }
@@ -73,12 +73,12 @@ export default function CreateLibraryScreen() {
           <Ionicons name="arrow-back" size={24} color="#fff" />
           <Text style={styles.backText}>Back</Text>
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Create Library</Text>
+        <Text style={styles.headerTitle}>Create Workout</Text>
       </View>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.form}>
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>Library Name *</Text>
+            <Text style={styles.label}>Workout Name *</Text>
             <TextInput
               style={styles.input}
               value={name}
@@ -97,7 +97,7 @@ export default function CreateLibraryScreen() {
               style={[styles.input, styles.textArea]}
               value={description}
               onChangeText={setDescription}
-              placeholder="What's this library for?"
+              placeholder="What's this workout for?"
               placeholderTextColor="#666"
               multiline
               numberOfLines={3}
@@ -127,12 +127,12 @@ export default function CreateLibraryScreen() {
               />
               <View style={styles.switchText}>
                 <Text style={styles.switchTitle}>
-                  {isPublic ? 'Public Library' : 'Private Library'}
+                  {isPublic ? 'Public Workout' : 'Private Workout'}
                 </Text>
                 <Text style={styles.switchDescription}>
-                  {isPublic 
-                    ? 'Anyone can find and view this library' 
-                    : 'Only you can see this library'}
+                  {isPublic
+                    ? 'Anyone can find and view this workout'
+                    : 'Only you can see this workout'}
                 </Text>
               </View>
             </View>
@@ -153,7 +153,7 @@ export default function CreateLibraryScreen() {
           disabled={loading}
         >
           <Text style={styles.createButtonText}>
-            {loading ? 'Creating...' : 'Create Library'}
+            {loading ? 'Creating...' : 'Create Workout'}
           </Text>
         </TouchableOpacity>
       </View>

@@ -51,7 +51,7 @@ export default function AddToLibraryScreen() {
           if (lib.id === libraryId) {
             const exists = lib.items.some(i => i.exerciseId === exerciseId);
             if (exists) {
-              Alert.alert('Already added', 'This exercise is already in this library');
+              Alert.alert('Already added', 'This exercise is already in this workout');
               return lib;
             }
             return {
@@ -66,7 +66,7 @@ export default function AddToLibraryScreen() {
         navigation.goBack();
       }
     } catch (e) {
-      Alert.alert('Error', 'Failed to add exercise');
+      Alert.alert('Error', 'Failed to add exercise to workout');
     }
   };
 
@@ -90,20 +90,20 @@ export default function AddToLibraryScreen() {
           <Ionicons name="arrow-back" size={24} color="#fff" />
           <Text style={styles.backText}>Back</Text>
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Add to Library</Text>
-        <Text style={styles.headerSubtitle}>Choose where to add this exercise</Text>
+        <Text style={styles.headerTitle}>Add to Workout</Text>
+        <Text style={styles.headerSubtitle}>Choose which workout to add this exercise to</Text>
       </View>
 
       {libraries.length === 0 ? (
         <View style={styles.emptyContainer}>
-          <Ionicons name="library-outline" size={64} color="#444" />
-          <Text style={styles.emptyTitle}>No libraries yet</Text>
-          <Text style={styles.emptyText}>Create a library first to add exercises</Text>
+          <Ionicons name="barbell-outline" size={64} color="#444" />
+          <Text style={styles.emptyTitle}>No workouts yet</Text>
+          <Text style={styles.emptyText}>Create a workout first to add exercises</Text>
           <TouchableOpacity
             style={styles.createButton}
             onPress={() => navigation.navigate('CreateLibrary')}
           >
-            <Text style={styles.createButtonText}>Create Library</Text>
+            <Text style={styles.createButtonText}>Create Workout</Text>
           </TouchableOpacity>
         </View>
       ) : (

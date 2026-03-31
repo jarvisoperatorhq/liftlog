@@ -56,7 +56,7 @@ export default function ExerciseDetailScreen() {
           if (lib.id === libraryId) {
             const exists = lib.items.some(i => i.exerciseId === exerciseId);
             if (exists) {
-              Alert.alert('Already added', 'This exercise is already in this library');
+              Alert.alert('Already added', 'This exercise is already in this workout');
               return lib;
             }
             return {
@@ -73,7 +73,7 @@ export default function ExerciseDetailScreen() {
         await AsyncStorage.setItem('@liftlog_libraries', JSON.stringify(updated));
         setLibraries(updated);
         setShowAddModal(false);
-        Alert.alert('Success', 'Exercise added to library');
+        Alert.alert('Success', 'Exercise added to workout');
       }
     } catch (e) {
       Alert.alert('Error', 'Failed to add exercise');
@@ -158,14 +158,14 @@ export default function ExerciseDetailScreen() {
         <View style={{ height: 100 }} />
       </ScrollView>
 
-      {/* Add to Library Button */}
+      {/* Add to Workout Button */}
       <View style={styles.footer}>
         <TouchableOpacity
           style={styles.addButton}
           onPress={() => setShowAddModal(true)}
         >
           <Ionicons name="add-circle" size={20} color="#fff" />
-          <Text style={styles.addButtonText}>Add to Library</Text>
+          <Text style={styles.addButtonText}>Add to Workout</Text>
         </TouchableOpacity>
       </View>
 
@@ -174,7 +174,7 @@ export default function ExerciseDetailScreen() {
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Add to Library</Text>
+              <Text style={styles.modalTitle}>Add to Workout</Text>
               <TouchableOpacity onPress={() => setShowAddModal(false)}>
                 <Ionicons name="close" size={24} color="#888" />
               </TouchableOpacity>
@@ -183,7 +183,7 @@ export default function ExerciseDetailScreen() {
             {libraries.length === 0 ? (
               <View style={styles.emptyLibraries}>
                 <Text style={styles.emptyLibrariesText}>
-                  You don't have any libraries yet
+                  You don't have any workouts yet
                 </Text>
                 <TouchableOpacity
                   style={styles.createLibraryButton}
@@ -192,7 +192,7 @@ export default function ExerciseDetailScreen() {
                     navigation.navigate('CreateLibrary');
                   }}
                 >
-                  <Text style={styles.createLibraryButtonText}>Create Library</Text>
+                  <Text style={styles.createLibraryButtonText}>Create Workout</Text>
                 </TouchableOpacity>
               </View>
             ) : (

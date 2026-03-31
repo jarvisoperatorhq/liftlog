@@ -66,7 +66,7 @@ export default function ProfileScreen() {
         <View style={styles.statsRow}>
           <View style={styles.stat}>
             <Text style={styles.statNumber}>{libraries.length}</Text>
-            <Text style={styles.statLabel}>Libraries</Text>
+            <Text style={styles.statLabel}>Workouts</Text>
           </View>
           <View style={styles.statDivider} />
           <View style={styles.stat}>

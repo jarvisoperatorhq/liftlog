@@ -95,16 +95,16 @@ export default function LibraryScreen() {
 
   const renderEmptyState = () => (
     <View style={styles.emptyContainer}>
-      <Ionicons name="library-outline" size={64} color="#444" />
-      <Text style={styles.emptyTitle}>No libraries yet</Text>
+      <Ionicons name="barbell-outline" size={64} color="#444" />
+      <Text style={styles.emptyTitle}>No workouts yet</Text>
       <Text style={styles.emptyText}>
-        Create your first workout library to organize your exercises
+        Create your first workout to organize your exercises
       </Text>
       <TouchableOpacity
         style={styles.emptyButton}
         onPress={() => navigation.navigate('CreateLibrary')}
       >
-        <Text style={styles.emptyButtonText}>Create Library</Text>
+        <Text style={styles.emptyButtonText}>Create Workout</Text>
       </TouchableOpacity>
     </View>
   );
@@ -113,9 +113,9 @@ export default function LibraryScreen() {
     <View style={styles.container}>
       <View style={styles.header}>
         <View>
-          <Text style={styles.headerTitle}>My Library</Text>
+          <Text style={styles.headerTitle}>Workouts</Text>
           <Text style={styles.headerSubtitle}>
-            {libraries.length} {libraries.length === 1 ? 'library' : 'libraries'}
+            {libraries.length} {libraries.length === 1 ? 'workout' : 'workouts'}
           </Text>
         </View>
         <TouchableOpacity

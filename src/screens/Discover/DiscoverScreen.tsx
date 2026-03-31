@@ -183,12 +183,12 @@ export default function DiscoverScreen() {
       </View>
 
       {item.ownerId !== 'current_user' && (
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.copyButton}
           onPress={() => copyLibrary(item)}
         >
           <Ionicons name="copy-outline" size={16} color="#7C5CFF" />
-          <Text style={styles.copyButtonText}>Save to My Library</Text>
+          <Text style={styles.copyButtonText}>Save to My Workouts</Text>
         </TouchableOpacity>
       )}
 
@@ -208,7 +208,7 @@ export default function DiscoverScreen() {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Discover</Text>
-        <Text style={styles.headerSubtitle}>Find workout libraries from the community</Text>
+        <Text style={styles.headerSubtitle}>Find workouts from the community</Text>
       </View>
 
       <ScrollView 
