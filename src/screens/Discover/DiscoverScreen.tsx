@@ -12,6 +12,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Library, RootStackParamList } from '../../types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -98,6 +99,7 @@ const categories = ['All', 'Strength', 'Hypertrophy', 'Beginner', 'Advanced', 'B
 
 export default function DiscoverScreen() {
   const navigation = useNavigation<DiscoverScreenNavigationProp>();
+  const insets = useSafeAreaInsets();
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [myLibraries, setMyLibraries] = useState<Library[]>([]);
 
@@ -206,7 +208,7 @@ export default function DiscoverScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
+      <View style={[styles.header, { paddingTop: insets.top + 20 }]}>
         <Text style={styles.headerTitle}>Discover</Text>
         <Text style={styles.headerSubtitle}>Find workouts from the community</Text>
       </View>
@@ -260,7 +262,6 @@ const styles = StyleSheet.create({
   },
   header: {
     padding: 20,
-    paddingTop: 60,
   },
   headerTitle: {
     fontSize: 32,

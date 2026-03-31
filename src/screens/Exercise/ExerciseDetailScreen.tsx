@@ -11,6 +11,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Exercise, Library, RootStackParamList } from '../../types';
 import { exercises } from '../../data/exercises';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -21,6 +22,7 @@ type ExerciseDetailNavigationProp = StackNavigationProp<RootStackParamList>;
 export default function ExerciseDetailScreen() {
   const route = useRoute<ExerciseDetailRouteProp>();
   const navigation = useNavigation<ExerciseDetailNavigationProp>();
+  const insets = useSafeAreaInsets();
   const { exerciseId } = route.params;
   
   const [exercise, setExercise] = useState<Exercise | null>(null);
@@ -90,7 +92,7 @@ export default function ExerciseDetailScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
+      <View style={[styles.header, { paddingTop: insets.top + 20 }]}>
         <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back" size={24} color="#fff" />
           <Text style={styles.backText}>Back</Text>
@@ -228,7 +230,6 @@ const styles = StyleSheet.create({
   },
   header: {
     padding: 20,
-    paddingTop: 60,
     paddingBottom: 10,
   },
   backButton: {

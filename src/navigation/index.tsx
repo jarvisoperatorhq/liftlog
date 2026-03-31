@@ -3,7 +3,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Ionicons } from '@expo/vector-icons';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { View } from 'react-native';
 
 import { RootStackParamList, BottomTabParamList } from '../types';
 
@@ -21,12 +22,14 @@ const Tab = createBottomTabNavigator<BottomTabParamList>();
 const Stack = createStackNavigator<RootStackParamList>();
 
 function TabNavigator() {
+  const insets = useSafeAreaInsets();
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName: keyof typeof Ionicons.glyphMap;
-          
+
           if (route.name === 'Workouts') {
             iconName = focused ? 'barbell' : 'barbell-outline';
           } else if (route.name === 'Discover') {
@@ -38,7 +41,7 @@ function TabNavigator() {
           } else {
             iconName = 'help-circle';
           }
-          
+
           return <Ionicons name={iconName} size={size} color={color} />;
         },
         tabBarActiveTintColor: '#7C5CFF',
@@ -46,6 +49,8 @@ function TabNavigator() {
         tabBarStyle: {
           backgroundColor: '#0F1113',
           borderTopColor: '#222',
+          paddingBottom: insets.bottom,
+          height: 60 + insets.bottom,
         },
         headerStyle: {
           backgroundColor: '#0F1113',

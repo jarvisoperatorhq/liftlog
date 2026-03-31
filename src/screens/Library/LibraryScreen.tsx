@@ -12,6 +12,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Library, RootStackParamList } from '../../types';
 
 type LibraryScreenNavigationProp = StackNavigationProp<RootStackParamList>;
@@ -27,6 +28,7 @@ const gradientColors: [string, string][] = [
 
 export default function LibraryScreen() {
   const navigation = useNavigation<LibraryScreenNavigationProp>();
+  const insets = useSafeAreaInsets();
   const [libraries, setLibraries] = useState<Library[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -111,7 +113,7 @@ export default function LibraryScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
+      <View style={[styles.header, { paddingTop: insets.top + 20 }]}>
         <View>
           <Text style={styles.headerTitle}>Workouts</Text>
           <Text style={styles.headerSubtitle}>
@@ -149,7 +151,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'flex-start',
     padding: 20,
-    paddingTop: 60,
   },
   headerTitle: {
     fontSize: 32,

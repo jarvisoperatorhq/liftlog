@@ -12,6 +12,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Library, LibraryItem, Exercise, RootStackParamList } from '../../types';
 import { exercises } from '../../data/exercises';
@@ -22,6 +23,7 @@ type LibraryDetailNavigationProp = StackNavigationProp<RootStackParamList>;
 export default function LibraryDetailScreen() {
   const route = useRoute<LibraryDetailRouteProp>();
   const navigation = useNavigation<LibraryDetailNavigationProp>();
+  const insets = useSafeAreaInsets();
   const { libraryId } = route.params;
   
   const [library, setLibrary] = useState<Library | null>(null);
@@ -170,7 +172,7 @@ export default function LibraryDetailScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
+      <View style={[styles.header, { paddingTop: insets.top + 20 }]}>
         <View style={styles.headerContent}>
           <Text style={styles.libraryName}>{library.name}</Text>
           {library.description && (
@@ -223,7 +225,6 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     padding: 20,
-    paddingTop: 20,
     borderBottomWidth: 1,
     borderBottomColor: '#222',
   },

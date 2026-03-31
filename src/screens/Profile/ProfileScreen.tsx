@@ -10,6 +10,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Library, RootStackParamList } from '../../types';
 
@@ -17,6 +18,7 @@ type ProfileScreenNavigationProp = StackNavigationProp<RootStackParamList>;
 
 export default function ProfileScreen() {
   const navigation = useNavigation<ProfileScreenNavigationProp>();
+  const insets = useSafeAreaInsets();
   const [libraries, setLibraries] = useState<Library[]>([]);
   const [notifications, setNotifications] = useState(true);
   const [darkMode, setDarkMode] = useState(true);
@@ -56,7 +58,7 @@ export default function ProfileScreen() {
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       {/* Profile Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, { paddingTop: insets.top + 20 }]}>
         <View style={styles.avatar}>
           <Ionicons name="person" size={40} color="#7C5CFF" />
         </View>
@@ -184,7 +186,6 @@ const styles = StyleSheet.create({
   header: {
     alignItems: 'center',
     padding: 20,
-    paddingTop: 60,
   },
   avatar: {
     width: 100,

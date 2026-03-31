@@ -12,6 +12,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Exercise, RootStackParamList } from '../../types';
 import { exercises, muscleGroups, equipmentTypes } from '../../data/exercises';
 
@@ -19,6 +20,7 @@ type SearchScreenNavigationProp = StackNavigationProp<RootStackParamList>;
 
 export default function SearchScreen() {
   const navigation = useNavigation<SearchScreenNavigationProp>();
+  const insets = useSafeAreaInsets();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedMuscles, setSelectedMuscles] = useState<string[]>([]);
   const [selectedEquipment, setSelectedEquipment] = useState<string[]>([]);
@@ -97,7 +99,7 @@ export default function SearchScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
+      <View style={[styles.header, { paddingTop: insets.top + 16 }]}>
         <View style={styles.searchContainer}>
           <Ionicons name="search" size={20} color="#666" style={styles.searchIcon} />
           <TextInput
@@ -233,7 +235,6 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     padding: 16,
-    paddingTop: 60,
     gap: 12,
   },
   searchContainer: {
