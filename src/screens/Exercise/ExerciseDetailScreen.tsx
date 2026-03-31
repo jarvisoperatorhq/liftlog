@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Alert,
   Image,
+  Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRoute, useNavigation } from '@react-navigation/native';
@@ -25,12 +26,14 @@ export default function ExerciseDetailScreen() {
   const navigation = useNavigation<ExerciseDetailNavigationProp>();
   const insets = useSafeAreaInsets();
   const { exerciseId } = route.params;
-  
+
   const [exercise, setExercise] = useState<Exercise | null>(null);
   const [libraries, setLibraries] = useState<Library[]>([]);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   const loadExercise = useCallback(async () => {
+    setImageError(false); // Reset image error state
     // First check built-in exercises
     const found = builtInExercises.find(e => e.id === exerciseId);
     if (found) {
@@ -123,8 +126,13 @@ export default function ExerciseDetailScreen() {
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {/* Header Card */}
         <View style={styles.headerCard}>
-          {exercise.imageUrl ? (
-            <Image source={{ uri: exercise.imageUrl }} style={styles.exerciseImage} resizeMode="cover" />
+          {exercise.imageUrl && !imageError ? (
+            <Image
+              source={{ uri: exercise.imageUrl }}
+              style={styles.exerciseImage}
+              resizeMode="cover"
+              onError={() => setImageError(true)}
+            />
           ) : (
             <View style={styles.headerIcon}>
               <Ionicons name="barbell" size={40} color="#7C5CFF" />
