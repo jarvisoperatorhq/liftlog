@@ -279,7 +279,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingBottom: 16,
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
   },
   categoryChip: {
     paddingHorizontal: 16,
@@ -289,8 +289,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#222',
     marginRight: 8,
-    flexShrink: 0,
-    flexGrow: 0,
+    alignSelf: 'flex-start',
   },
   categoryChipActive: {
     backgroundColor: '#7C5CFF',
