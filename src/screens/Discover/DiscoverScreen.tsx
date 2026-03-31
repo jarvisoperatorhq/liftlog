@@ -227,10 +227,12 @@ export default function DiscoverScreen() {
             ]}
             onPress={() => setSelectedCategory(category)}
           >
-            <Text style={[
-              styles.categoryChipText,
-              selectedCategory === category && styles.categoryChipTextActive,
-            ]}>
+            <Text
+              style={[
+                styles.categoryChipText,
+                selectedCategory === category && styles.categoryChipTextActive,
+              ]}
+            >
               {category}
             </Text>
           </TouchableOpacity>
@@ -277,6 +279,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingBottom: 16,
     flexDirection: 'row',
+    alignItems: 'center',
   },
   categoryChip: {
     paddingHorizontal: 16,
@@ -287,6 +290,7 @@ const styles = StyleSheet.create({
     borderColor: '#222',
     marginRight: 8,
     flexShrink: 0,
+    flexGrow: 0,
   },
   categoryChipActive: {
     backgroundColor: '#7C5CFF',
