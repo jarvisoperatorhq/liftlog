@@ -95,44 +95,48 @@ export default function SearchScreen() {
   };
 
   const deleteExercise = async (exerciseId: string) => {
-    Alert.alert(
-      'Delete Exercise',
-      'Are you sure? This will remove the exercise from all workouts.',
-      [
-        { text: 'Cancel', style: 'cancel', onPress: () => setActiveMenuId(null) },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              // Remove from custom exercises
-              const stored = await AsyncStorage.getItem('@liftlog_custom_exercises');
-              if (stored) {
-                const customExercises: Exercise[] = JSON.parse(stored);
-                const filtered = customExercises.filter(e => e.id !== exerciseId);
-                await AsyncStorage.setItem('@liftlog_custom_exercises', JSON.stringify(filtered));
-                setCustomExercises(filtered);
-              }
+    const confirmDelete = async () => {
+      try {
+        // Remove from custom exercises
+        const stored = await AsyncStorage.getItem('@liftlog_custom_exercises');
+        if (stored) {
+          const customExercises: Exercise[] = JSON.parse(stored);
+          const filtered = customExercises.filter(e => e.id !== exerciseId);
+          await AsyncStorage.setItem('@liftlog_custom_exercises', JSON.stringify(filtered));
+          setCustomExercises(filtered);
+        }
 
-              // Remove from all libraries
-              const librariesStored = await AsyncStorage.getItem('@liftlog_libraries');
-              if (librariesStored) {
-                const allLibraries = JSON.parse(librariesStored);
-                const updated = allLibraries.map((lib: any) => ({
-                  ...lib,
-                  items: lib.items.filter((i: any) => i.exerciseId !== exerciseId),
-                }));
-                await AsyncStorage.setItem('@liftlog_libraries', JSON.stringify(updated));
-              }
+        // Remove from all libraries
+        const librariesStored = await AsyncStorage.getItem('@liftlog_libraries');
+        if (librariesStored) {
+          const allLibraries = JSON.parse(librariesStored);
+          const updated = allLibraries.map((lib: any) => ({
+            ...lib,
+            items: lib.items.filter((i: any) => i.exerciseId !== exerciseId),
+          }));
+          await AsyncStorage.setItem('@liftlog_libraries', JSON.stringify(updated));
+        }
+      } catch (e) {
+        console.error('Failed to delete exercise:', e);
+      }
+    };
 
-              setActiveMenuId(null);
-            } catch (e) {
-              Alert.alert('Error', 'Failed to delete exercise');
-            }
-          },
-        },
-      ]
-    );
+    if (typeof window !== 'undefined' && window.confirm) {
+      // Web: use browser confirm
+      if (window.confirm('Delete this exercise? This will remove it from all workouts.')) {
+        await confirmDelete();
+      }
+    } else {
+      // Native: use Alert
+      Alert.alert(
+        'Delete Exercise',
+        'Are you sure? This will remove the exercise from all workouts.',
+        [
+          { text: 'Cancel', style: 'cancel' },
+          { text: 'Delete', style: 'destructive', onPress: confirmDelete },
+        ]
+      );
+    }
   };
 
   const renderExerciseItem = ({ item }: { item: Exercise }) => {
