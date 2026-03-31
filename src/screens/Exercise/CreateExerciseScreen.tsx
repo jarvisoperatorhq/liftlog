@@ -117,8 +117,9 @@ export default function CreateExerciseScreen() {
 
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       style={styles.container}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? insets.top + 44 : 0}
     >
       <View style={[styles.header, { paddingTop: insets.top + 20 }]}>
         <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
@@ -477,7 +478,8 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   footer: {
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingTop: 20,
     borderTopWidth: 1,
     borderTopColor: '#222',
     backgroundColor: '#0F1113',
