@@ -127,6 +127,9 @@ export default function CreateExerciseScreen() {
           <Text style={styles.backText}>Back</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Create Exercise</Text>
+        <TouchableOpacity style={styles.headerCreateButton} onPress={handleCreate}>
+          <Text style={styles.headerCreateButtonText}>Save</Text>
+        </TouchableOpacity>
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -298,15 +301,9 @@ export default function CreateExerciseScreen() {
             ))}
           </View>
 
-          <View style={{ height: 100 }} />
+          <View style={{ height: 40 }} />
         </View>
       </ScrollView>
-
-      <View style={[styles.footer, { paddingBottom: insets.bottom + 20 }]}>
-        <TouchableOpacity style={styles.createButton} onPress={handleCreate}>
-          <Text style={styles.createButtonText}>Create Exercise</Text>
-        </TouchableOpacity>
-      </View>
     </KeyboardAvoidingView>
   );
 }
@@ -317,6 +314,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#0F1113',
   },
   header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     padding: 20,
     borderBottomWidth: 1,
     borderBottomColor: '#222',
@@ -324,7 +324,6 @@ const styles = StyleSheet.create({
   backButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 12,
   },
   backText: {
     fontSize: 16,
@@ -335,6 +334,17 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     color: '#fff',
+  },
+  headerCreateButton: {
+    backgroundColor: '#7C5CFF',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 8,
+  },
+  headerCreateButtonText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '600',
   },
   scrollContent: {
     flexGrow: 1,
