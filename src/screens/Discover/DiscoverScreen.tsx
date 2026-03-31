@@ -276,7 +276,7 @@ const styles = StyleSheet.create({
   categoriesContainer: {
     paddingHorizontal: 16,
     paddingBottom: 16,
-    gap: 8,
+    flexDirection: 'row',
   },
   categoryChip: {
     paddingHorizontal: 16,
@@ -286,6 +286,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#222',
     marginRight: 8,
+    flexShrink: 0,
   },
   categoryChipActive: {
     backgroundColor: '#7C5CFF',
