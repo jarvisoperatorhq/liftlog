@@ -31,9 +31,12 @@ export default function ExerciseDetailScreen() {
   const [libraries, setLibraries] = useState<Library[]>([]);
   const [showAddModal, setShowAddModal] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const [isCustom, setIsCustom] = useState(false);
 
   const loadExercise = useCallback(async () => {
     setImageError(false); // Reset image error state
+    setIsCustom(false);
+    
     // First check built-in exercises
     const found = builtInExercises.find(e => e.id === exerciseId);
     if (found) {
@@ -50,6 +53,7 @@ export default function ExerciseDetailScreen() {
         const customFound = customExercises.find(e => e.id === exerciseId);
         if (customFound) {
           setExercise(customFound);
+          setIsCustom(true);
           navigation.setOptions({ title: customFound.name });
         }
       }
@@ -107,6 +111,50 @@ export default function ExerciseDetailScreen() {
     }
   };
 
+  const deleteExercise = () => {
+    Alert.alert(
+      'Delete Exercise',
+      'Are you sure? This will remove the exercise from all workouts.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              // Remove from custom exercises
+              const stored = await AsyncStorage.getItem('@liftlog_custom_exercises');
+              if (stored) {
+                const customExercises: Exercise[] = JSON.parse(stored);
+                const filtered = customExercises.filter(e => e.id !== exerciseId);
+                await AsyncStorage.setItem('@liftlog_custom_exercises', JSON.stringify(filtered));
+              }
+
+              // Remove from all libraries
+              const librariesStored = await AsyncStorage.getItem('@liftlog_libraries');
+              if (librariesStored) {
+                const allLibraries: Library[] = JSON.parse(librariesStored);
+                const updated = allLibraries.map(lib => ({
+                  ...lib,
+                  items: lib.items.filter(i => i.exerciseId !== exerciseId),
+                }));
+                await AsyncStorage.setItem('@liftlog_libraries', JSON.stringify(updated));
+              }
+
+              navigation.goBack();
+            } catch (e) {
+              Alert.alert('Error', 'Failed to delete exercise');
+            }
+          },
+        },
+      ]
+    );
+  };
+
+  const editExercise = () => {
+    navigation.navigate('EditExercise', { exerciseId });
+  };
+
   if (!exercise) {
     return (
       <View style={styles.container}>
@@ -122,6 +170,16 @@ export default function ExerciseDetailScreen() {
           <Ionicons name="arrow-back" size={24} color="#fff" />
           <Text style={styles.backText}>Back</Text>
         </TouchableOpacity>
+        {isCustom && (
+          <View style={styles.headerActions}>
+            <TouchableOpacity style={styles.headerAction} onPress={editExercise}>
+              <Ionicons name="create-outline" size={24} color="#7C5CFF" />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.headerAction} onPress={deleteExercise}>
+              <Ionicons name="trash-outline" size={24} color="#FF6B6B" />
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {/* Header Card */}
@@ -263,12 +321,23 @@ const styles = StyleSheet.create({
     backgroundColor: '#0F1113',
   },
   header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     padding: 20,
     paddingBottom: 10,
   },
   backButton: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  headerActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+  },
+  headerAction: {
+    padding: 4,
   },
   backText: {
     fontSize: 16,

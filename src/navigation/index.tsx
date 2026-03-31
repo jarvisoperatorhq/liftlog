@@ -18,6 +18,7 @@ import LibraryDetailScreen from '../screens/Library/LibraryDetailScreen';
 import CreateLibraryScreen from '../screens/Library/CreateLibraryScreen';
 import AddToLibraryScreen from '../screens/Library/AddToLibraryScreen';
 import CreateExerciseScreen from '../screens/Exercise/CreateExerciseScreen';
+import EditExerciseScreen from '../screens/Exercise/EditExerciseScreen';
 
 const Tab = createBottomTabNavigator<BottomTabParamList>();
 const Stack = createStackNavigator<RootStackParamList>();
@@ -128,6 +129,11 @@ export default function App() {
             name="CreateExercise"
             component={CreateExerciseScreen}
             options={{ title: 'Create Exercise' }}
+          />
+          <Stack.Screen
+            name="EditExercise"
+            component={EditExerciseScreen}
+            options={{ title: 'Edit Exercise' }}
           />
         </Stack.Navigator>
       </NavigationContainer>

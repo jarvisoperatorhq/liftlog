@@ -48,6 +48,7 @@ export type RootStackParamList = {
   CreateLibrary: undefined;
   AddToLibrary: { exerciseId: string };
   CreateExercise: undefined;
+  EditExercise: { exerciseId: string };
 };
 
 export type BottomTabParamList = {
