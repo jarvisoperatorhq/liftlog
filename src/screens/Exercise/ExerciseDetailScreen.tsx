@@ -6,6 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Alert,
+  Image,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRoute, useNavigation } from '@react-navigation/native';
@@ -122,9 +123,13 @@ export default function ExerciseDetailScreen() {
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {/* Header Card */}
         <View style={styles.headerCard}>
-          <View style={styles.headerIcon}>
-            <Ionicons name="barbell" size={40} color="#7C5CFF" />
-          </View>
+          {exercise.imageUrl ? (
+            <Image source={{ uri: exercise.imageUrl }} style={styles.exerciseImage} resizeMode="cover" />
+          ) : (
+            <View style={styles.headerIcon}>
+              <Ionicons name="barbell" size={40} color="#7C5CFF" />
+            </View>
+          )}
           <Text style={styles.exerciseName}>{exercise.name}</Text>
           <View style={styles.muscleChips}>
             {exercise.muscleGroups.map((muscle, i) => (
@@ -286,6 +291,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(124, 92, 255, 0.1)',
     justifyContent: 'center',
     alignItems: 'center',
+    marginBottom: 16,
+  },
+  exerciseImage: {
+    width: 200,
+    height: 200,
+    borderRadius: 16,
     marginBottom: 16,
   },
   exerciseName: {
